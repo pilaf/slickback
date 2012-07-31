@@ -28,6 +28,11 @@
           collection.totalEntries = 4;
           expect(collection.getPagingInfo().totalRows).toEqual(4);
         });
+        it("sets totalPages", function() {
+          collection.perPage = 3;
+          collection.totalEntries = 4;
+          expect(collection.getPagingInfo().totalPages).toEqual(2);
+        });
       });
 
       describe("when paging parameters are absent", function() {
@@ -104,9 +109,10 @@
       it("publishes an onPagingInfoChanged notification", function() {
         collection.onPagingInfoChanged.notify =
           jasmine.createSpy("onPagingInfoChanged#notify");
-        collection.setPagingOptions({ pageNum: 2 });
+        collection.totalEntries = 7;
+        collection.setPagingOptions({ pageNum: 2, pageSize: 3 });
         expect(collection.onPagingInfoChanged.notify).
-          toHaveBeenCalledWith({ pageNum: 2 });
+          toHaveBeenCalledWith({ pageNum: 2, pageSize: 3, totalRows: 7, totalPages: 3 });
       });
 
       it("invokes fetchWithPagination on the collection", function() {
